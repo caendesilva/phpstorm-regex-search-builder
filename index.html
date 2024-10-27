@@ -4,11 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Regex Builder for PhpStorm</title>
+    <meta name="description" content="A simple tool to build regular expressions for PhpStorm's Find in Files feature to search for multiple substrings in any order">
+    <meta name="keywords" content="regex, regular expressions, PhpStorm, search tool, developer tools">
+    <meta name="author" content="Caen De Silva">
     <style>
         body {
             font-family: system-ui, -apple-system, sans-serif;
             max-width: 800px;
             margin: 2rem auto;
+            margin-bottom: 1.25rem;
             padding: 0 1rem;
             line-height: 1.5;
         }
@@ -98,6 +102,25 @@
             padding: 0.1rem 0.4rem;
             font-size: 0.875rem;
         }
+
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 1rem;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        footer a {
+            color: #2563eb; 
+        }
+
+        footer span {
+            color: #6b7280;
+        }
     </style>
 </head>
 <body>
@@ -165,5 +188,17 @@
         // Initialize on page load
         generateRegex();
     </script>
+
+    <footer>
+        <p>
+            <small>
+                <a href="https://github.com/caendesilva/phpstorm-regex-search-builder" target="_blank" rel="noopener nofollow">View source code on GitHub</a>
+            </small>
+            <span>&dash;</span>
+            <small>
+                Not affiliated with JetBrains or PhpStorm
+            </small>
+        </p>
+    </footer>
 </body>
 </html>
