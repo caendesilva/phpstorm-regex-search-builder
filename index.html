@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regex Builder for PhpStorm</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Regex Builder for PhpStorm</h1>
+
+    <p>This tool helps you create regular expressions for PhpStorm's "Find in Files" feature to find lines containing multiple substrings in any order.</p>
+
+    <label for="substring1">Substring 1:</label>
+    <input type="text" id="substring1" placeholder="Enter first substring (e.g., apple)">
+
+    <label for="substring2">Substring 2:</label>
+    <input type="text" id="substring2" placeholder="Enter second substring (e.g., banana)">
+
+    <button onclick="generateRegex()">Generate Regex</button>
+
+    <p><b>Generated Regex:</b> <span id="output"></span></p>
+
+    <h2>Instructions:</h2>
+    <ol>
+        <li>Enter the substrings you want to search for in the fields above.</li>
+        <li>Click "Generate Regex".</li>
+        <li>Copy the generated regular expression.</li>
+        <li>In PhpStorm, press `Ctrl+Shift+F` (or `Cmd+Shift+F` on macOS) to open "Find in Files".</li>
+        <li>Check the "Regex" checkbox.</li>
+        <li>Paste the copied regex into the search field.</li>
+        <li>Set the desired scope for your search.</li>
+        <li>Click "Find".</li>
+    </ol>
+
+    <script>
+        function generateRegex() {
+            var substring1 = document.getElementById("substring1").value;
+            var substring2 = document.getElementById("substring2").value;
+            var regex = "(?=.*" + substring1 + ")(?=.*" + substring2 + ").*";
+            document.getElementById("output").textContent = regex;
+        }
+    </script>
+
+</body>
+</html>
