@@ -6,63 +6,164 @@
     <title>Regex Builder for PhpStorm</title>
     <style>
         body {
-            font-family: sans-serif;
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            line-height: 1.5;
         }
+
+        .container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
         }
+
         input[type="text"] {
             width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
             box-sizing: border-box;
+            font-size: 1rem;
         }
-        button {
-            padding: 8px 16px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+
+        .output-container {
+            background-color: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .output-label {
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .output {
+            font-family: monospace;
+            word-break: break-all;
+            color: #059669;
+        }
+
+        .helper-text {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+        }
+
+        .instructions {
+            background-color: #f8f9fa;
+            border-left: 4px solid #2563eb;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+
+        .instructions h2 {
+            margin-top: 0;
+            color: #1f2937;
+        }
+
+        .instructions ol {
+            padding-left: 1.25rem;
+            margin: 0;
+        }
+
+        .instructions li {
+            margin-bottom: 0.5rem;
+        }
+
+        kbd {
+            background-color: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 3px;
+            padding: 0.1rem 0.4rem;
+            font-size: 0.875rem;
         }
     </style>
 </head>
 <body>
-
     <h1>Regex Builder for PhpStorm</h1>
-
     <p>This tool helps you create regular expressions for PhpStorm's "Find in Files" feature to find lines containing multiple substrings in any order.</p>
+    
+    <div class="container">
+        <label for="substrings">Enter substrings (comma-separated):</label>
+        <input 
+            type="text" 
+            id="substrings" 
+            placeholder="Enter substrings separated by commas (e.g., apple, banana, orange)"
+            oninput="generateRegex()"
+        >
+        <p class="helper-text">Example: apple, banana, orange</p>
+        
+        <div class="output-container">
+            <div class="output-label">Generated Regex:</div>
+            <div id="output" class="output"></div>
+        </div>
+    </div>
 
-    <label for="substring1">Substring 1:</label>
-    <input type="text" id="substring1" placeholder="Enter first substring (e.g., apple)">
-
-    <label for="substring2">Substring 2:</label>
-    <input type="text" id="substring2" placeholder="Enter second substring (e.g., banana)">
-
-    <button onclick="generateRegex()">Generate Regex</button>
-
-    <p><b>Generated Regex:</b> <span id="output"></span></p>
-
-    <h2>Instructions:</h2>
-    <ol>
-        <li>Enter the substrings you want to search for in the fields above.</li>
-        <li>Click "Generate Regex".</li>
-        <li>Copy the generated regular expression.</li>
-        <li>In PhpStorm, press `Ctrl+Shift+F` (or `Cmd+Shift+F` on macOS) to open "Find in Files".</li>
-        <li>Check the "Regex" checkbox.</li>
-        <li>Paste the copied regex into the search field.</li>
-        <li>Set the desired scope for your search.</li>
-        <li>Click "Find".</li>
-    </ol>
+    <div class="instructions">
+        <h2>Instructions:</h2>
+        <ol>
+            <li>Enter the substrings you want to search for in the field above, separated by commas.</li>
+            <li>The regex will update automatically as you type.</li>
+            <li>Copy the generated regular expression.</li>
+            <li>In PhpStorm, press <kbd>Ctrl+Shift+F</kbd> (or <kbd>Cmd+Shift+F</kbd> on macOS) to open "Find in Files".</li>
+            <li>Check the "Regex" checkbox.</li>
+            <li>Paste the copied regex into the search field.</li>
+            <li>Set the desired scope for your search.</li>
+            <li>Click "Find".</li>
+        </ol>
+    </div>
 
     <script>
         function generateRegex() {
-            var substring1 = document.getElementById("substring1").value;
-            var substring2 = document.getElementById("substring2").value;
-            var regex = "(?=.*" + substring1 + ")(?=.*" + substring2 + ").*";
+            const input = document.getElementById("substrings").value;
+            
+            // If input is empty, clear the output
+            if (!input.trim()) {
+                document.getElementById("output").textContent = "";
+                return;
+            }
+
+            // Split the input by commas and trim whitespace
+            const substrings = input.split(',')
+                .map(s => s.trim())
+                .filter(s => s.length > 0);
+
+            // Generate the regex pattern
+            const regex = substrings
+                .map(s => `(?=.*${escapeRegExp(s)})`)
+                .join('') + '.*';
+
             document.getElementById("output").textContent = regex;
         }
-    </script>
 
+        // Helper function to escape special regex characters
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        // Initialize on page load
+        generateRegex();
+    </script>
 </body>
 </html>
